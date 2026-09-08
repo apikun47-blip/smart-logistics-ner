@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLogistics } from '../context/LogisticsContext';
-import { DemoScenarioBar } from '../components/common/DemoScenarioBar';
 import { RerouteAlertBanner } from '../components/common/RerouteAlertBanner';
 import { 
   Compass, 
@@ -16,11 +15,14 @@ import {
   Navigation,
   CheckCircle2,
   TrendingUp,
-  Cpu
+  Cpu,
+  Radio,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 
 export const OverviewPage = () => {
-  const { setActiveTab, regionalData, incidents } = useLogistics();
+  const { setActiveTab, regionalData, incidents, runRouteAnalysis, setOrigin, setDestination } = useLogistics();
 
   const regions = regionalData?.regions || [
     { state: "Assam", risk_level: "LOW", weather: "Partly Cloudy, 28°C", active_incidents: 2, status_badge: "Normal Transit" },
@@ -32,6 +34,25 @@ export const OverviewPage = () => {
     { state: "Tripura", risk_level: "LOW", weather: "Clear Sky, 30°C", active_incidents: 0, status_badge: "Optimal" },
     { state: "Sikkim", risk_level: "MODERATE", weather: "Mist & Drizzle, 12°C", active_incidents: 1, status_badge: "High Altitude Warning" }
   ];
+
+  const quickCorridors = [
+    { o: "Guwahati", d: "Shillong", cargo: "Medicine", weight: 500, desc: "NH-40 Ridge Highway (Elevation 1,525m)" },
+    { o: "Imphal", d: "Aizawl", cargo: "Electronics", weight: 350, desc: "NH-2 & NH-54 Inter-State Hill Arterial" },
+    { o: "Siliguri", d: "Gangtok", cargo: "Construction Material", weight: 8000, desc: "NH-10 Teesta Gorge Mountain Corridor" },
+    { o: "Kohima", d: "Itanagar", cargo: "Vegetables", weight: 1200, desc: "Foothill Highway Multi-Region Route" }
+  ];
+
+  const handleQuickLaunch = async (corridor) => {
+    setOrigin(corridor.o);
+    setDestination(corridor.d);
+    await runRouteAnalysis({
+      origin: corridor.o,
+      destination: corridor.d,
+      cargo_type: corridor.cargo,
+      cargo_weight_kg: corridor.weight,
+      vehicle_type: "Medium Truck"
+    }, true);
+  };
 
   const getRiskColor = (level) => {
     switch (level) {
@@ -90,20 +111,21 @@ export const OverviewPage = () => {
             <button
               data-testid="hero-explore-live-map-btn"
               onClick={() => setActiveTab('map')}
-              className="bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-5 py-3 rounded-xl border border-slate-700 transition"
+              className="bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-5 py-3 rounded-xl border border-slate-700 transition flex items-center space-x-2"
             >
-              Explore Live Map
+              <MapPin className="w-4 h-4 text-emerald-400" />
+              <span>Explore Live Map</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Demo Presets Bar */}
-      <DemoScenarioBar />
-
-      {/* Core KPIs */}
+      {/* Core KPIs - Interactive Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-testid="overview-kpis">
-        <div className="bg-[#0D1527] border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div 
+          onClick={() => setActiveTab('planner')}
+          className="bg-[#0D1527] border border-slate-800 hover:border-slate-700 rounded-xl p-4 shadow-lg cursor-pointer transition"
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">Active Shipments</span>
             <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
@@ -113,10 +135,13 @@ export const OverviewPage = () => {
           <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono" data-testid="kpi-active-shipments">
             24
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block">Live freight units in transit</span>
+          <span className="text-[11px] text-slate-400 mt-1 block">Live freight units in transit →</span>
         </div>
 
-        <div className="bg-[#0D1527] border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div 
+          onClick={() => setActiveTab('map')}
+          className="bg-[#0D1527] border border-slate-800 hover:border-slate-700 rounded-xl p-4 shadow-lg cursor-pointer transition"
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">Routes Monitored</span>
             <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
@@ -126,10 +151,13 @@ export const OverviewPage = () => {
           <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono" data-testid="kpi-routes-monitored">
             18
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block">8 NE States & Chicken's Neck</span>
+          <span className="text-[11px] text-slate-400 mt-1 block">8 NE States & Chicken's Neck →</span>
         </div>
 
-        <div className="bg-[#0D1527] border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div 
+          onClick={() => setActiveTab('map')}
+          className="bg-[#0D1527] border border-slate-800 hover:border-slate-700 rounded-xl p-4 shadow-lg cursor-pointer transition"
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">High Risk Routes</span>
             <div className="p-2 bg-orange-500/10 text-orange-400 rounded-lg">
@@ -139,10 +167,13 @@ export const OverviewPage = () => {
           <div className="text-2xl sm:text-3xl font-extrabold text-orange-400 font-mono" data-testid="kpi-high-risk-routes">
             4
           </div>
-          <span className="text-[11px] text-orange-300/80 mt-1 block">Monsoon & landslide prone</span>
+          <span className="text-[11px] text-orange-300/80 mt-1 block">Monsoon & landslide prone →</span>
         </div>
 
-        <div className="bg-[#0D1527] border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div 
+          onClick={() => setActiveTab('incidents')}
+          className="bg-[#0D1527] border border-slate-800 hover:border-slate-700 rounded-xl p-4 shadow-lg cursor-pointer transition"
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">Active Incidents</span>
             <div className="p-2 bg-red-500/10 text-red-400 rounded-lg">
@@ -150,9 +181,62 @@ export const OverviewPage = () => {
             </div>
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-red-400 font-mono" data-testid="kpi-active-incidents">
-            7
+            {incidents.length || 7}
           </div>
-          <span className="text-[11px] text-red-300/80 mt-1 block">Landslides, floods & bottlenecks</span>
+          <span className="text-[11px] text-red-300/80 mt-1 block">Landslides, floods & bottlenecks →</span>
+        </div>
+      </div>
+
+      {/* Strategic Freight Corridors (Instant Route Analyzer) */}
+      <div className="bg-[#0D1527] border border-slate-800 rounded-2xl p-6 shadow-xl" data-testid="quick-corridors-section">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+          <div className="flex items-center space-x-2">
+            <Radio className="w-5 h-5 text-emerald-400 animate-pulse" />
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-white font-['Outfit']">
+                High-Volume North-Eastern Freight Corridors
+              </h2>
+              <p className="text-xs text-slate-400">
+                Click any key logistics artery to immediately analyze AI safety and accessibility metrics
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setActiveTab('planner')}
+            className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center space-x-1"
+          >
+            <span>Custom Route Search</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {quickCorridors.map((c, idx) => (
+            <div
+              key={idx}
+              data-testid={`quick-corridor-card-${idx}`}
+              onClick={() => handleQuickLaunch(c)}
+              className="bg-slate-900/90 border border-slate-800 hover:border-emerald-500/60 rounded-xl p-4 cursor-pointer transition duration-150 group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-sm font-bold text-white group-hover:text-emerald-400 transition">
+                    {c.o} → {c.d}
+                  </span>
+                  <span className="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-mono">
+                    {c.cargo}
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-400 line-clamp-2">
+                  {c.desc}
+                </p>
+              </div>
+              <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs text-emerald-400 font-semibold">
+                <span>Analyze Route</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -160,7 +244,7 @@ export const OverviewPage = () => {
       <div className="bg-[#0D1527] border border-slate-800 rounded-2xl p-6 shadow-xl" data-testid="regional-logistics-status">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
           <div>
-            <h2 className="text-lg font-bold text-white font-['Outfit']">
+            <h2 className="text-base sm:text-lg font-bold text-white font-['Outfit']">
               Regional Logistics & Terrain Risk Matrix
             </h2>
             <p className="text-xs text-slate-400">
@@ -176,8 +260,9 @@ export const OverviewPage = () => {
           {regions.map((reg) => (
             <div 
               key={reg.state}
+              onClick={() => setActiveTab('map')}
               data-testid={`state-risk-card-${reg.state.toLowerCase().replace(/\s+/g, '-')}`}
-              className="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 hover:border-slate-700 transition flex flex-col justify-between"
+              className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 hover:bg-slate-900 cursor-pointer transition flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-white text-sm">{reg.state}</span>
@@ -201,7 +286,7 @@ export const OverviewPage = () => {
         </div>
       </div>
 
-      {/* Recent Alerts & Quick Scenarios Two-Column */}
+      {/* Recent Alerts & Philosophy Two-Column */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Alerts */}
         <div className="bg-[#0D1527] border border-slate-800 rounded-2xl p-6 shadow-xl" data-testid="recent-alerts-panel">
@@ -224,8 +309,9 @@ export const OverviewPage = () => {
             {incidents.slice(0, 4).map((inc) => (
               <div 
                 key={inc.id}
+                onClick={() => setActiveTab('incidents')}
                 data-testid={`alert-item-${inc.id}`}
-                className="bg-slate-900/90 border border-slate-800/90 rounded-xl p-3 text-xs flex items-start space-x-3"
+                className="bg-slate-900/90 border border-slate-800/90 hover:border-slate-700 rounded-xl p-3 text-xs flex items-start space-x-3 cursor-pointer transition"
               >
                 <div className={`p-2 rounded-lg mt-0.5 flex-shrink-0 ${
                   inc.severity === 'Critical' ? 'bg-red-600 text-white' : (inc.severity === 'High' ? 'bg-orange-500/20 text-orange-400' : 'bg-amber-500/20 text-amber-400')

@@ -84,7 +84,7 @@ export const IncidentsPage = () => {
             className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl flex items-center space-x-2 shadow-lg shadow-red-950 transition"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Simulate Critical Landslide (WOW Trigger)</span>
+            <span>Simulate Critical Hazard (Live Reroute Test)</span>
           </button>
 
           <button

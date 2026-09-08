@@ -30,10 +30,11 @@ This platform implements an AI-assisted logistics intelligence command center th
 ## 3. Implemented Features (Completed on September 8, 2026)
 - **Global Status Bar:** Real-time indicator showing System Operational, Weather Monitoring ACTIVE, 18 Routes Monitored, 7 Active Incidents, and Demo Data mode badge with 1-click Reset Demo button.
 - **Overview Command Dashboard:**
-  - Hero banner with quick start CTA.
-  - KPI Metrics (24 Active Shipments, 18 Monitored Corridors, 4 High Risk Slopes, 7 Active Incidents).
+  - Hero banner with quick start CTA ("START ROUTE PLANNING →" and "Explore Live Map").
+  - KPI Metrics (24 Active Shipments, 18 Monitored Corridors, 4 High Risk Slopes, 7 Active Incidents) with one-click direct tab navigations.
+  - High-Volume North-Eastern Freight Corridors (Instant Route Analyzers for Guwahati→Shillong, Imphal→Aizawl, Siliguri→Gangtok, Kohima→Itanagar).
   - Regional Logistics & Terrain Risk Matrix for all 8 North Eastern States.
-  - Recent Road Hazard alerts ticker.
+  - Recent Road Hazard alerts ticker with direct incident links.
 - **Interactive AI Route Planner:**
   - Arbitrary Origin & Destination search with fast datalist autocomplete and swap utility.
   - Cargo Type selector (Medicine, Vegetables, Construction Material, Electronics).

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useLogistics } from '../context/LogisticsContext';
 import { PRESET_HUBS } from '../constants/demoData';
-import { DemoScenarioBar } from '../components/common/DemoScenarioBar';
 import { 
   Navigation, 
   MapPin, 
@@ -116,9 +115,6 @@ export const PlannerPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Demo Scenario Presets */}
-      <DemoScenarioBar />
 
       {/* Form Container */}
       <div className="bg-[#0D1527] border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
