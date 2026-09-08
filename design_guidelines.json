@@ -1,0 +1,49 @@
+{
+  "project_name": "AI-Based Smart Logistics & Accessibility Intelligence Platform for North Eastern India",
+  "tagline": "PREDICT → OPTIMIZE → ADAPT",
+  "design_context": "command_center_dashboard",
+  "emotional_tone": "High-tech AI Logistics Command Center (Authoritative, Mission-Critical, Precision, Resilient)",
+  "typography": {
+    "heading_font": "Outfit, sans-serif",
+    "body_font": "Inter, sans-serif",
+    "mono_font": "JetBrains Mono, monospace"
+  },
+  "colors": {
+    "primary": "#0A0F1D",
+    "secondary": "#111827",
+    "accent_emerald": "#10B981",
+    "warning_amber": "#F59E0B",
+    "critical_red": "#EF4444",
+    "neutral_dark": "#030712",
+    "surface": "#1F2937",
+    "border": "#374151"
+  },
+  "grids": {
+    "base": "grid-cols-1 md:grid-cols-4 lg:grid-cols-12",
+    "gap": "gap-6"
+  },
+  "component_path": "/app/frontend/src/components",
+  "image_urls": {
+    "mountain_road_aerial": "https://images.unsplash.com/photo-1717344211780-28618c62482d?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "cargo_truck": "https://images.unsplash.com/photo-1766676664085-fb42871030ee?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "command_monitor": "https://images.unsplash.com/photo-1589186161289-9eb8898086df?crop=entropy&cs=srgb&fm=jpg&q=85"
+  },
+  "instructions_to_main_agent": [
+    "Build a hackathon-ready Command Center Dashboard for North Eastern India Logistics & Accessibility Intelligence.",
+    "Implement Global Status Bar with live system alerts, weather advisories for 8 NE states (Assam, Meghalaya, Arunachal, Nagaland, Manipur, Mizoram, Tripura, Sikkim).",
+    "Implement Overview Dashboard with NE regional risk grid, live telemetry, and Recharts analytics.",
+    "Implement Interactive AI Route Planner with dynamic origin/destination selection across NE hubs (Guwahati, Shillong, Tura, Imphal, Aizawl, Kohima, Itanagar, Gangtok, Silchar, Dibrugarh), cargo type, weight, and vehicle type restrictions.",
+    "Implement Route Analysis with side-by-side comparison (Route A Fastest, Route B Safest, Route C Balanced) and AI Overall Score calculation.",
+    "Implement Explainable AI 'Why this route?' panel detailing landslide risk index, slope gradient, road quality, and weather factor.",
+    "Implement Live Leaflet Map integration displaying routes, terrain, risk heatmaps, and incident markers.",
+    "Implement Incident Intelligence & Reporting Modal with instant live rerouting and score recalculation upon reporting landslide/flood/roadblock.",
+    "Implement Demo Mode Scenarios with 1-click triggers (e.g. NH-40 Landslide simulation, Monsoon Flash Flood in Barak Valley, Multi-Axle Heavy Truck restriction test).",
+    "Ensure ALL interactive elements include `data-testid` attributes for robust automated testing."
+  ],
+  "universal_guidelines": [
+    "Dark command center palette with emerald, amber, and red accents.",
+    "Generous padding and modern cardless or subtle border aesthetic (max 8px radius or crisp tactical borders).",
+    "Smooth transitions and interactive micro-animations.",
+    "No transparent backgrounds on dropdowns or overlays."
+  ]
+}
