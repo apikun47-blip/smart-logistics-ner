@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLogistics } from '../../context/LogisticsContext';
+import { useAuth } from '../../context/AuthContext';
+import { toast } from 'sonner';
 import { 
   LayoutDashboard, 
   Navigation, 
@@ -8,11 +10,31 @@ import {
   AlertOctagon, 
   BarChart3,
   Compass,
-  Cpu
+  Cpu,
+  LogIn,
+  LogOut,
+  ChevronDown,
+  UserCircle2,
+  ShieldCheck
 } from 'lucide-react';
 
 export const Navbar = () => {
   const { activeTab, setActiveTab } = useLogistics();
+  const { user, setAuthView, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const initials = user && user.name
+    ? user.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
+    : 'U';
 
   const navItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard, testId: 'nav-overview' },
@@ -73,16 +95,77 @@ export const Navbar = () => {
           })}
         </nav>
 
-        {/* Quick Route Planner CTA */}
+        {/* Quick Route Planner CTA + Auth */}
         <div className="flex items-center space-x-2">
           <button
             data-testid="header-plan-route-cta"
             onClick={() => setActiveTab('planner')}
-            className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow-md shadow-emerald-900/40 transition hover:shadow-emerald-900/60"
+            className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow-md shadow-emerald-900/40 transition hover:shadow-emerald-900/60 btn-glow"
           >
             <Cpu className="w-3.5 h-3.5" />
             <span>Plan Route</span>
           </button>
+
+          {user && typeof user === 'object' ? (
+            <div className="relative" ref={menuRef}>
+              <button
+                data-testid="user-menu-btn"
+                onClick={() => setMenuOpen((o) => !o)}
+                className="flex items-center space-x-2 pl-1.5 pr-2.5 py-1.5 rounded-full bg-slate-800/70 border border-slate-700/70 hover:border-emerald-500/50 transition-all duration-200"
+              >
+                <span className="h-7 w-7 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-[11px] font-bold text-white shadow-md shadow-emerald-900/40">
+                  {initials}
+                </span>
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {menuOpen && (
+                <div
+                  data-testid="user-menu-dropdown"
+                  className="absolute right-0 mt-2 w-64 glass-card rounded-2xl shadow-2xl shadow-black/60 overflow-hidden auth-card-enter"
+                >
+                  <div className="p-4 border-b border-slate-800/80">
+                    <div className="flex items-center space-x-3">
+                      <span className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-sm font-bold text-white shrink-0">
+                        {initials}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-white truncate" data-testid="user-menu-name">{user.name}</div>
+                        <div className="text-[11px] text-slate-400 truncate" data-testid="user-menu-email">{user.email}</div>
+                      </div>
+                    </div>
+                    {user.role === 'admin' && (
+                      <div className="mt-2.5 inline-flex items-center space-x-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>ADMIN OPERATOR</span>
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    data-testid="user-menu-logout"
+                    onClick={async () => {
+                      setMenuOpen(false);
+                      await logout();
+                      toast.success('Signed out successfully');
+                    }}
+                    className="w-full flex items-center space-x-2 px-4 py-3 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              data-testid="header-signin-btn"
+              onClick={() => setAuthView('login')}
+              className="flex items-center space-x-2 bg-slate-800/70 border border-slate-700/70 hover:border-emerald-500/60 hover:text-emerald-400 text-slate-200 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all duration-200"
+            >
+              {user === null ? <UserCircle2 className="w-3.5 h-3.5 animate-pulse" /> : <LogIn className="w-3.5 h-3.5" />}
+              <span>Sign In</span>
+            </button>
+          )}
         </div>
       </div>
 

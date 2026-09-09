@@ -63,6 +63,16 @@ This platform implements an AI-assisted logistics intelligence command center th
   - Heavy Multi-Axle Freight Restriction (Siliguri → Gangtok).
   - Cross-Border Transit (Imphal → Aizawl).
 
+## 3b. Authentication & Aesthetic Upgrade (Completed June 2026)
+- **Optional JWT Authentication** (dashboard remains open to guests):
+  - Backend module `/app/backend/auth.py` — register, login, logout, me, refresh, forgot-password (prototype: reset token returned in response, no email service), reset-password.
+  - bcrypt password hashing, httpOnly secure cookies (access 60min + refresh 7d), brute-force lockout (5 fails per ip:email → 15 min, X-Forwarded-For aware for multi-pod), admin seeding from env, Mongo indexes (users.email unique, TTL on reset tokens).
+  - Admin: admin@nelogistics.in / Admin@NER2026 (see /app/memory/test_credentials.md).
+- **Animated Auth Overlay** (`AuthPage.jsx`): glassmorphism card, floating gradient orbs, grid backdrop, Sign In/Sign Up tabs, forgot/reset flow with auto-filled token, show/hide password, continue-as-guest.
+- **Navbar auth UI**: Sign In button (guest) / avatar profile dropdown with name, email, ADMIN badge, Sign Out.
+- **Visual polish**: glass-card system, page-enter transitions on tab switch, button glow hovers, custom selection color.
+- Tested: iteration_2.json — backend auth 6/6 after brute-force fix, frontend auth flows 100%, guest dashboard regression passed.
+
 ---
 
 ## 4. Backlog & Future Extensions

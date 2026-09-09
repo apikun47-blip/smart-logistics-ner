@@ -1,5 +1,7 @@
 import React from 'react';
 import { LogisticsProvider, useLogistics } from './context/LogisticsContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import AuthPage from './pages/AuthPage';
 import { StatusBar } from './components/layout/StatusBar';
 import { Navbar } from './components/layout/Navbar';
 import { OverviewPage } from './pages/OverviewPage';
@@ -12,6 +14,7 @@ import { Toaster } from './components/ui/sonner';
 
 const MainAppContent = () => {
   const { activeTab } = useLogistics();
+  const { authView } = useAuth();
 
   const renderActivePage = () => {
     switch (activeTab) {
@@ -42,8 +45,13 @@ const MainAppContent = () => {
 
       {/* Main Page Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6">
-        {renderActivePage()}
+        <div key={activeTab} className="page-enter">
+          {renderActivePage()}
+        </div>
       </main>
+
+      {/* Auth Overlay */}
+      {authView && <AuthPage />}
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-[#060A14] py-6 px-4 sm:px-6 text-center text-xs text-slate-500">
@@ -68,9 +76,11 @@ const MainAppContent = () => {
 
 function App() {
   return (
-    <LogisticsProvider>
-      <MainAppContent />
-    </LogisticsProvider>
+    <AuthProvider>
+      <LogisticsProvider>
+        <MainAppContent />
+      </LogisticsProvider>
+    </AuthProvider>
   );
 }
 

@@ -20,8 +20,14 @@ client = AsyncIOMotorClient(mongo_url)
 db_name = os.environ['DB_NAME']
 db = client[db_name]
 
+from auth import auth_router, setup_auth
+
 app = FastAPI(title="AI Logistics Intelligence - North Eastern India", version="1.0.0")
 api_router = APIRouter(prefix="/api")
+
+@app.on_event("startup")
+async def startup_auth():
+    await setup_auth()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -768,6 +774,7 @@ async def get_analytics_data():
 
 # Include the router in the main app
 app.include_router(api_router)
+app.include_router(auth_router)
 
 app.add_middleware(
     CORSMiddleware,
